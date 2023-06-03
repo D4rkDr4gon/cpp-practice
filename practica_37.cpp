@@ -2,8 +2,12 @@
 using namespace std;
 
 int main(){
-    //algoritmo de ordenamiento
-    
+    //premite el ingreso de mas de una palabra a un string
+    string texto;
+
+    getline(cin,texto);
+
+    cout << texto;
 
     return 0;
 }
