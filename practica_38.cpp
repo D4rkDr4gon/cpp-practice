@@ -42,6 +42,8 @@ void BusquedaLineal(int Array[], int size, int valor) {
     for (int i = 0; i < size; i++) {
         if (Array[i] == valor) {
             cout << "la poscision: " << i << " la variable: " << Array[i] << endl;
+        } else {
+            cout << "valor no encontrado" << endl;
         }
     }
 }
@@ -57,10 +59,13 @@ int BusquedaBin(const int Array[], int size, int Valor) {
         if (Array[medio] == Valor) {
             return medio + 1;
         } else if (Array[medio] < Valor) {
-            
+            inicio = medio;
+        } else {
+            fin = medio;
         }
-    }
 
+        cout << "Estoy evaluando entre la posición " << inicio << " y la posición " << fin << endl;
+    }
 
     return -1;
 }
