@@ -47,14 +47,61 @@ void OrdenarLista(Producto array[], int SIZE) {
     }
 }
 
+//algoritmo de busqueda binaria
+int BuscarProducto(const Producto array[], int SIZE, const string& nombre, const string& marca) {
+    int izq = 0;
+    int der = SIZE - 1;
+
+    while (izq <= der) {
+        int mid = izq + (der - izq) / 2;
+
+        // Comparar el nombre y marca del producto en la posición "mid" con el nombre y marca buscados
+        if (array[mid].NomProduct == nombre && array[mid].marca == marca) {
+            return mid;  // Se encontró el producto, devolver su índice
+        } else if (array[mid].NomProduct < nombre || (array[mid].NomProduct == nombre && array[mid].marca < marca)) {
+            izq = mid + 1;  // El producto buscado está en la mitad derecha del subarray
+        } else {
+            der = mid - 1;  // El producto buscado está en la mitad izquierda del subarray
+        }
+    }
+
+    return -1;  // No se encontró el producto
+}
+
+
 int main() {
+    //array
     Producto lista[4];
+    //variables
+    string nombre;
+    string marca;
 
     //insertar productos
     InsertarProducto(lista, 4);
+
+    //ordenar productos
     OrdenarLista(lista, 4);
 
-     //imprimir lista de productos
+    cout << "-------------------------" << endl;
+
+    //buscar productos
+    int indice = BuscarProducto(lista, 4, nombre, marca);
+    
+    cout << "nombre del producto a buscar: ";
+    getline(cin, nombre);
+    cout << "marca del producto a buscar: ";
+    getline(cin, marca);
+    
+    if (indice != -1) {
+        cout << "El producto se encuentra en la posición " << indice << endl;
+    } else {
+        cout << "El producto no fue encontrado" << endl;
+    }
+
+
+    cout << "-------------------------" << endl;
+
+    //imprimir lista de productos
     for (int i = 0; i < 4; i++) {
         cout << "Producto " << i + 1 << ":" << endl;
         cout << "Nombre: " << lista[i].NomProduct << endl;
