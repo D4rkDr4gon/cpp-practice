@@ -20,6 +20,7 @@ Estudiante dameEstudiante(int codigo) {
 }
 
 int main() {
+    //array
     Estudiante estudiantes[3];
     
     for (int i = 0; i < 3; i++) {
@@ -27,14 +28,18 @@ int main() {
         estudiantes[i] = dameEstudiante(i + 1);
     }
     
+    //crea archivo
     FILE* archivo = fopen("estudiantes_binarios.dat", "wb");
     
     if (archivo != NULL) {
+        //escribe en el archivo
         fwrite(estudiantes, sizeof(Estudiante), 3, archivo);
+        //cierra el archivo
         fclose(archivo);
         cout << "Archivo creado exitosamente." << endl;
     } else {
         cout << "No se pudo crear el archivo." << endl;
     }
+
     return 0;
 }
