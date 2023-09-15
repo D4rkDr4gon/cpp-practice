@@ -17,7 +17,7 @@ bool ValidarEmail(const string& email) {
 }
 
 void Registro() {
-    FILE* archivo = fopen("registros.dat", "ab");
+    FILE* archivo = fopen("registros.dat", "ab+");
 
     if (archivo == nullptr) {
         cout << "Error al abrir el archivo." << endl;
@@ -44,6 +44,7 @@ void Registro() {
 
     usuario1.meritos = 100;
 
+    cout << "Registro guardado exitosamente." << endl;
     cout << "-------------" << endl;
 
     fwrite(&usuario1, sizeof(Usuario), 1, archivo);
