@@ -42,7 +42,7 @@ void Registro() {
         return;
     }
 
-    usuario1.meritos = 100;
+    usuario1.meritos = 1000;
 
     cout << "Registro guardado exitosamente." << endl;
     cout << "-------------" << endl;
