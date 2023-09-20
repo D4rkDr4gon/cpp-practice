@@ -5,6 +5,7 @@
         "titleBar.activeForeground": "#FAFCFE"
     },
     "files.associations": {
-        "*.tcc": "cpp"
+        "*.tcc": "cpp",
+        "iostream": "cpp"
     }
 }

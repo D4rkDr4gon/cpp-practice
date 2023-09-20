@@ -1,147 +1,123 @@
 #include <iostream>
-#include <string>
-#include <vector>
 #include <regex>
+#include <string>
+
 using namespace std;
 
-// Módulo 1: Gestor de estudiantes
+// Módulo 1: Gestor de Estudiantes
 
 struct Estudiante {
+    int legajo;
+    string nombre;
     string email;
     string clave;
-    int creditos;
-
-    Estudiante(const string& e, const string& c) : email(e), clave(c), creditos(1000) {}
+    int meritos;
 };
 
-bool ValidarEmail(const string& email) {
-    regex patron("\\b[A-Za-z0-9._%+-]+@frba.utn.edu.ar\\b");
-    return regex_match(email, patron);
+int numero_legajo = 1; // Inicializar el número de legajo
+
+void ver_informacion_estudiante(Estudiante estudiante) {
+    cout << "Información del estudiante:" << endl;
+    cout << "Legajo: " << estudiante.legajo << endl;
+    cout << "Nombre: " << estudiante.nombre << endl;
+    cout << "Email: " << estudiante.email << endl;
+    cout << "Méritos disponibles: " << estudiante.meritos << endl;
 }
 
-void RegistrarEstudiante(vector<Estudiante>& estudiantes) {
-    string email, clave;
-    cout << "Ingrese su email: ";
-    cin >> email;
+void modificar_informacion_estudiante(Estudiante& estudiante) {
+    cout << "Modificar información del estudiante:" << endl;
+    cout << "1. Cambiar nombre" << endl;
+    cout << "2. Cambiar contraseña" << endl;
+    cout << "3. Salir" << endl;
+    int opcion;
+    cout << "¿Qué desea hacer? (1/2/3): ";
+    cin >> opcion;
+    if (opcion == 1) {
+        cout << "Nuevo nombre: ";
+        cin >> estudiante.nombre;
+    } else if (opcion == 2) {
+        cout << "Nueva clave: ";
+        cin >> estudiante.clave;
+    }
+    cout << "Información modificada con éxito." << endl;
+}
 
-    if (!ValidarEmail(email)) {
+bool validar_email(string email) {
+    // Función para validar el formato de un email
+    string pattern = R"(\b[A-Za-z0-9._%+-]+@frba.utn.edu.ar\b)";
+    return regex_match(email, regex(pattern));
+}
+
+void crear_cuenta_estudiante(Estudiante estudiantes[], int& numEstudiantes) {
+    cout << "Crear nueva cuenta de estudiante:" << endl;
+    Estudiante nuevoEstudiante;
+    cout << "Nombre del estudiante: ";
+    cin >> nuevoEstudiante.nombre;
+    cout << "Ingrese el email del estudiante: ";
+    cin >> nuevoEstudiante.email;
+    cout << "Ingrese la clave del estudiante: ";
+    cin >> nuevoEstudiante.clave;
+
+    if (!validar_email(nuevoEstudiante.email)) {
         cout << "Email no válido." << endl;
         return;
     }
 
-    for (const Estudiante& estudiante : estudiantes) {
-        if (estudiante.email == email) {
+    for (int i = 0; i < numEstudiantes; ++i) {
+        if (estudiantes[i].email == nuevoEstudiante.email) {
             cout << "El email ya está registrado." << endl;
             return;
         }
     }
 
-    cout << "Ingrese su clave: ";
-    cin >> clave;
-    estudiantes.push_back(Estudiante(email, clave));
+    nuevoEstudiante.legajo = numero_legajo;
+    numero_legajo++;
+    nuevoEstudiante.meritos = 1000;
+    estudiantes[numEstudiantes] = nuevoEstudiante;
+    numEstudiantes++;
+
     cout << "Registro exitoso." << endl;
 }
 
-// Módulo 2: Gestor de beneficios y acreditación de logros
+// Módulo 2: Gestor de Beneficios y Acreditación de Logros
 
 struct Beneficio {
     string nombre;
     int costo;
-
-    Beneficio(const string& n, int c) : nombre(n), costo(c) {}
 };
 
-void AgregarBeneficio(vector<Beneficio>& beneficios) {
-    string nombre;
-    int costo;
+void agregar_beneficio(Beneficio beneficios[], int& numBeneficios) {
     cout << "Ingrese el nombre del beneficio: ";
-    cin.ignore();
-    getline(cin, nombre);
+    cin >> beneficios[numBeneficios].nombre;
     cout << "Ingrese el costo del beneficio en créditos: ";
-    cin >> costo;
-    beneficios.push_back(Beneficio(nombre, costo));
+    cin >> beneficios[numBeneficios].costo;
+    numBeneficios++;
     cout << "Beneficio agregado exitosamente." << endl;
 }
 
-void ListarBeneficios(const vector<Beneficio>& beneficios) {
+void listar_beneficios(Beneficio beneficios[], int numBeneficios) {
     cout << "Beneficios disponibles:" << endl;
-    for (const Beneficio& beneficio : beneficios) {
-        cout << beneficio.nombre << " - Costo: " << beneficio.costo << " créditos" << endl;
+    for (int i = 0; i < numBeneficios; ++i) {
+        cout << beneficios[i].nombre << " - Costo: " << beneficios[i].costo << " créditos" << endl;
     }
 }
 
-void AcreditarLogros(Estudiante& estudiante, int puntos) {
-    estudiante.creditos += puntos;
-    cout << "Se acreditaron " << puntos << " puntos. Créditos disponibles: " << estudiante.creditos << endl;
+void acreditar_logros(Estudiante& estudiante, int puntos) {
+    estudiante.meritos += puntos;
+    cout << "Se acreditaron " << puntos << " puntos. Méritos disponibles: " << estudiante.meritos << endl;
 }
 
-// Módulo 3: Consumidor de beneficios
+// Módulo 3: Consumidor de Beneficios
 
-void IniciarSesion(const vector<Estudiante>& estudiantes, vector<Beneficio>& beneficios) {
-    string email, clave;
-    cout << "Ingrese su email: ";
-    cin >> email;
-    cout << "Ingrese su clave: ";
-    cin >> clave;
-
-    for (Estudiante& estudiante : estudiantes) {
-        if (estudiante.email == email && estudiante.clave == clave) {
-            cout << "Inicio de sesión exitoso." << endl;
-            MostrarMenuBeneficios(estudiante, beneficios);
-            return;
-        }
-    }
-
-    cout << "Credenciales incorrectas." << endl;
-}
-
-void MostrarMenuBeneficios(Estudiante& estudiante, vector<Beneficio>& beneficios) {
-    while (true) {
-        cout << "\n--- Menú de Beneficios ---" << endl;
-        cout << "1. Mostrar créditos disponibles" << endl;
-        cout << "2. Mostrar beneficios disponibles" << endl;
-        cout << "3. Consumir un beneficio" << endl;
-        cout << "4. Acreditar logros" << endl;
-        cout << "5. Cerrar sesión" << endl;
-        cout << "Elija una opción: ";
-
-        int opcion;
-        cin >> opcion;
-
-        switch (opcion) {
-            case 1:
-                cout << "Créditos disponibles: " << estudiante.creditos << endl;
-                break;
-            case 2:
-                ListarBeneficios(beneficios);
-                break;
-            case 3:
-                ConsumirBeneficio(estudiante, beneficios);
-                break;
-            case 4:
-                int puntos;
-                cout << "Ingrese la cantidad de puntos a acreditar: ";
-                cin >> puntos;
-                AcreditarLogros(estudiante, puntos);
-                break;
-            case 5:
-                return;
-            default:
-                cout << "Opción no válida. Intente nuevamente." << endl;
-        }
-    }
-}
-
-void ConsumirBeneficio(Estudiante& estudiante, vector<Beneficio>& beneficios) {
-    string nombreBeneficio;
+void consumir_beneficio(Estudiante& estudiante, Beneficio beneficios[], int& numBeneficios) {
+    string nombre_beneficio;
     cout << "Ingrese el nombre del beneficio que desea consumir: ";
-    cin.ignore();
-    getline(cin, nombreBeneficio);
+    cin >> nombre_beneficio;
 
-    for (Beneficio& beneficio : beneficios) {
-        if (beneficio.nombre == nombreBeneficio && beneficio.costo <= estudiante.creditos) {
-            estudiante.creditos -= beneficio.costo;
-            cout << "Beneficio '" << nombreBeneficio << "' consumido. Créditos restantes: " << estudiante.creditos << endl;
+    for (int i = 0; i < numBeneficios; ++i) {
+        if (beneficios[i].nombre == nombre_beneficio && beneficios[i].costo <= estudiante.meritos) {
+            estudiante.meritos -= beneficios[i].costo;
+            cout << "Beneficio '" << nombre_beneficio << "' consumido. Créditos restantes: " << estudiante.meritos << endl;
             return;
         }
     }
@@ -154,95 +130,166 @@ void ConsumirBeneficio(Estudiante& estudiante, vector<Beneficio>& beneficios) {
 struct Administrador {
     string username;
     string password;
-
-    Administrador(const string& u, const string& p) : username(u), password(p) {}
 };
 
-bool AutenticarAdministrador(const vector<Administrador>& administradores, const string& username, const string& password) {
-    for (const Administrador& admin : administradores) {
-        if (admin.username == username && admin.password == password) {
+bool autenticar_administrador(Administrador administradores[], int numAdministradores, string username, string password) {
+    for (int i = 0; i < numAdministradores; ++i) {
+        if (administradores[i].username == username && administradores[i].password == password) {
             return true;
         }
     }
     return false;
 }
 
-void MenuAdministracion(vector<Estudiante>& estudiantes, vector<Beneficio>& beneficios) {
+void menu_administracion(Estudiante estudiantes[], int numEstudiantes, Beneficio beneficios[], int numBeneficios) {
     while (true) {
         cout << "\n--- Menú de Administración ---" << endl;
         cout << "1. Modificar datos de estudiante" << endl;
         cout << "2. Agregar beneficio" << endl;
-        cout << "3. Salir" << endl;
-        cout << "Elija una opción: ";
+        cout << "3. Crear cuenta de estudiante" << endl;
+        cout << "4. Salir" << endl;
 
         int opcion;
+        cout << "Elija una opción: ";
         cin >> opcion;
 
-        switch (opcion) {
-            case 1:
-                ModificarDatosEstudiante(estudiantes);
-                break;
-            case 2:
-                AgregarBeneficio(beneficios);
-                break;
-            case 3:
-                return;
-            default:
-                cout << "Opción no válida. Intente nuevamente." << endl;
+        if (opcion == 1) {
+            string email;
+            cout << "Ingrese el email del estudiante cuyos datos desea modificar: ";
+            cin >> email;
+
+            for (int i = 0; i < numEstudiantes; ++i) {
+                if (estudiantes[i].email == email) {
+                    modificar_informacion_estudiante(estudiantes[i]);
+                    break;
+                }
+            }
+
+            cout << "Estudiante no encontrado." << endl;
+        } else if (opcion == 2) {
+            if (numBeneficios < 100) { // Suponemos un máximo de 100 beneficios
+                agregar_beneficio(beneficios, numBeneficios);
+            } else {
+                cout << "Se ha alcanzado el límite de beneficios." << endl;
+            }
+        } else if (opcion == 3) {
+            if (numEstudiantes < 100) { // Suponemos un máximo de 100 estudiantes
+                crear_cuenta_estudiante(estudiantes, numEstudiantes);
+            } else {
+                cout << "Se ha alcanzado el límite de estudiantes." << endl;
+            }
+        } else if (opcion == 4) {
+            return;
+        } else {
+            cout << "Opción no válida. Intente nuevamente." << endl;
         }
     }
 }
 
-int main() {
-    vector<Estudiante> estudiantes;
-    vector<Beneficio> beneficios;
-    vector<Administrador> administradores;
+void guardar_registros(Estudiante estudiantes[], int numEstudiantes, Beneficio beneficios[], int numBeneficios) {
+    FILE* registros_file = fopen("registros.dat", "wb");
 
-    // Agregar administradores autorizados
-    administradores.push_back(Administrador("admin1", "password1"));
-    administradores.push_back(Administrador("admin2", "password2"));
+    if (registros_file != nullptr) {
+        fwrite(estudiantes, sizeof(Estudiante), numEstudiantes, registros_file);
+        fwrite(beneficios, sizeof(Beneficio), numBeneficios, registros_file);
+        fclose(registros_file);
+        cout << "Registros guardados exitosamente." << endl;
+    } else {
+        cout << "Error al abrir el archivo de registros." << endl;
+    }
+}
+
+void guardar_logros_y_beneficios(Beneficio beneficios[], int numBeneficios) {
+    FILE* logros_file = fopen("logrosYbeneficios.txt", "wb");
+
+    if (logros_file != nullptr) {
+        // Utilizamos fwrite para escribir los datos en el archivo binario
+        for (int i = 0; i < numBeneficios; ++i) {
+            fwrite(beneficios[i].nombre.c_str(), sizeof(char), beneficios[i].nombre.size(), logros_file);
+            fwrite("\n", sizeof(char), 1, logros_file);
+            fwrite(&beneficios[i].costo, sizeof(int), 1, logros_file);
+            fwrite(" créditos\n", sizeof(char), 10, logros_file);
+        }
+        fclose(logros_file);
+        cout << "Logros y beneficios guardados exitosamente." << endl;
+    } else {
+        cout << "Error al abrir el archivo de logros y beneficios." << endl;
+    }
+}
+
+void iniciar_sesion_estudiante(Estudiante estudiantes[], int numEstudiantes, Beneficio beneficios[], int numBeneficios) {
+    string email;
+    string clave;
+    cout << "Ingrese su email: ";
+    cin >> email;
+    cout << "Ingrese su clave: ";
+    cin >> clave;
+
+    for (int i = 0; i < numEstudiantes; ++i) {
+        if (estudiantes[i].email == email && estudiantes[i].clave == clave) {
+            cout << "Inicio de sesión exitoso." << endl;
+            // Aquí deberías llamar a la función para mostrar el menú de beneficios.
+            return;
+        }
+    }
+
+    cout << "Credenciales incorrectas." << endl;
+}
+
+int main() {
+    Estudiante estudiantes[100]; // Supongamos un máximo de 100 estudiantes
+    int numEstudiantes = 0;
+    Beneficio beneficios[100];   // Supongamos un máximo de 100 beneficios
+    int numBeneficios = 0;
+    Administrador administradores[2]; // Usamos 2 administradores
+
+    administradores[0].username = "admin1";
+    administradores[0].password = "contraseña1";
+    administradores[1].username = "admin2";
+    administradores[1].password = "contraseña2";
 
     while (true) {
         cout << "\n--- Menú Principal ---" << endl;
-        cout << "1. Registrar estudiante" << endl;
-        cout << "2. Iniciar sesión como estudiante" << endl;
-        cout << "3. Administración" << endl;
-        cout << "4. Listar beneficios" << endl;
-        cout << "5. Salir" << endl;
-        cout << "Elija una opción: ";
+        cout << "1. Iniciar sesión como estudiante" << endl;
+        cout << "2. Iniciar sesión como administrador" << endl;
+        cout << "3. Crear cuenta de estudiante" << endl;
+        cout << "4. Salir" << endl;
 
         int opcion;
+        cout << "Elija una opción: ";
         cin >> opcion;
 
-        switch (opcion) {
-            case 1:
-                RegistrarEstudiante(estudiantes);
-                break;
-            case 2:
-                IniciarSesion(estudiantes, beneficios);
-                break;
-            case 3:
-                {
-                    string username, password;
-                    cout << "Ingrese su nombre de usuario: ";
-                    cin >> username;
-                    cout << "Ingrese su contraseña: ";
-                    cin >> password;
+        if (opcion == 1) {
+            iniciar_sesion_estudiante(estudiantes, numEstudiantes, beneficios, numBeneficios);
+        } else if (opcion == 2) {
+            while (true) {
+                string username;
+                string password;
+                cout << "Ingrese el nombre de usuario del administrador: ";
+                cin >> username;
+                cout << "Ingrese la contraseña del administrador: ";
+                cin >> password;
 
-                    if (AutenticarAdministrador(administradores, username, password)) {
-                        MenuAdministracion(estudiantes, beneficios);
-                    } else {
-                        cout << "Acceso no autorizado." << endl;
-                    }
+                if (autenticar_administrador(administradores, 2, username, password)) {
+                    cout << "Inicio de sesión de administrador exitoso." << endl;
+                    menu_administracion(estudiantes, numEstudiantes, beneficios, numBeneficios);
+                    break;
+                } else {
+                    cout << "Credenciales de administrador incorrectas. Intente nuevamente." << endl;
                 }
-                break;
-            case 4:
-                ListarBeneficios(beneficios);
-                break;
-            case 5:
-                return 0;
-            default:
-                cout << "Opción no válida. Intente nuevamente." << endl;
+            }
+        } else if (opcion == 3) {
+            if (numEstudiantes < 100) { // Suponemos un máximo de 100 estudiantes
+                crear_cuenta_estudiante(estudiantes, numEstudiantes);
+            } else {
+                cout << "Se ha alcanzado el límite de estudiantes." << endl;
+            }
+        } else if (opcion == 4) {
+            guardar_registros(estudiantes, numEstudiantes, beneficios, numBeneficios);
+            guardar_logros_y_beneficios(beneficios, numBeneficios);
+            break;
+        } else {
+            cout << "Opción no válida. Intente nuevamente." << endl;
         }
     }
 
