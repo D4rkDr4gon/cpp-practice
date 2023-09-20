@@ -1,0 +1,37 @@
+# Descripción Técnica del Sistema de Gestión de Créditos Universitarios
+
+El Sistema de Gestión de Créditos Universitarios es una aplicación diseñada para permitir a los estudiantes de una universidad acceder a beneficios ofrecidos por la institución, gestionar sus créditos y acreditar logros. La aplicación se divide en cuatro módulos principales, cada uno con su funcionalidad específica. A continuación, se presenta una descripción técnica de cada módulo, explicando los algoritmos utilizados y la elección de las bibliotecas o librerías:
+
+## Módulo 1: Gestor de Estudiantes
+
+**Funcionalidad:** 
+Este módulo permite a los estudiantes registrarse en el sistema proporcionando su correo electrónico y una clave. Además, asigna automáticamente 1000 créditos a cada estudiante registrado.
+
+**Algoritmo Utilizado:** 
+Se utiliza un enfoque simple de almacenamiento en memoria para los datos de los estudiantes. Se verifica la validez del correo electrónico mediante una expresión regular proporcionada por la librería `<regex>`. Esto garantiza que los correos electrónicos se ajusten al formato requerido (por ejemplo, que terminen en "@frba.utn.edu.ar"). La elección de la librería `<regex>` se debe a su capacidad para realizar coincidencias de patrones de manera eficiente.
+
+## Módulo 2: Gestor de Beneficios y Acreditación de Logros
+
+**Funcionalidad:** 
+Este módulo permite a la universidad agregar, listar y modificar beneficios ofrecidos a los estudiantes. También incluye la acreditación de logros adquiribles por los estudiantes.
+
+**Algoritmo Utilizado:** 
+Se utiliza un enfoque basado en vectores para almacenar los beneficios y logros. Los beneficios se almacenan en un vector de estructuras `Beneficio`, que contiene el nombre y el costo del beneficio. Los logros podrían implementarse de manera similar en una estructura `Logro`. La elección de vectores se debe a su facilidad de uso y eficiencia en términos de acceso y modificación de elementos.
+
+## Módulo 3: Consumidor de Beneficios
+
+**Funcionalidad:** 
+Los estudiantes pueden iniciar sesión en este módulo utilizando su correo electrónico y clave. Una vez autenticados, pueden consultar sus créditos disponibles, ver los beneficios disponibles y consumir beneficios si tienen créditos suficientes.
+
+**Algoritmo Utilizado:** 
+Se implementa un bucle de menú para permitir a los estudiantes interactuar con el sistema. El acceso a los datos se realiza mediante búsqueda lineal en los vectores de beneficios y estudiantes registrados. El algoritmo de búsqueda lineal se eligió debido a la simplicidad y al hecho de que los vectores no son excesivamente grandes, por lo que la eficiencia no es una preocupación principal.
+
+## Módulo 4: Administración
+
+**Funcionalidad:** 
+Este módulo permite a los administradores autorizados modificar los datos de los estudiantes, agregar nuevos beneficios y acreditar logros adquiribles.
+
+**Algoritmo Utilizado:** 
+Se implementa un sistema de autenticación de administradores que verifica el nombre de usuario y la contraseña ingresados. Una vez autenticados, los administradores pueden acceder a las funciones de modificación de datos y agregación de beneficios. La elección de un enfoque de autenticación simple se debe a la simplicidad del sistema y al hecho de que solo los administradores autorizados deben tener acceso.
+
+En resumen, el sistema utiliza un enfoque modular con estructuras de datos simples, como vectores, para mantener y administrar los datos. Se utilizan expresiones regulares para la validación de correos electrónicos y se implementa un enfoque de búsqueda lineal para acceder a los beneficios y estudiantes registrados. Estas elecciones se basan en la simplicidad y eficiencia adecuada para las necesidades del sistema.

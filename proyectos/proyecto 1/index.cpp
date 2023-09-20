@@ -149,15 +149,64 @@ void ConsumirBeneficio(Estudiante& estudiante, vector<Beneficio>& beneficios) {
     cout << "No se pudo consumir el beneficio." << endl;
 }
 
+// Módulo 4: Administración
+
+struct Administrador {
+    string username;
+    string password;
+
+    Administrador(const string& u, const string& p) : username(u), password(p) {}
+};
+
+bool AutenticarAdministrador(const vector<Administrador>& administradores, const string& username, const string& password) {
+    for (const Administrador& admin : administradores) {
+        if (admin.username == username && admin.password == password) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void MenuAdministracion(vector<Estudiante>& estudiantes, vector<Beneficio>& beneficios) {
+    while (true) {
+        cout << "\n--- Menú de Administración ---" << endl;
+        cout << "1. Modificar datos de estudiante" << endl;
+        cout << "2. Agregar beneficio" << endl;
+        cout << "3. Salir" << endl;
+        cout << "Elija una opción: ";
+
+        int opcion;
+        cin >> opcion;
+
+        switch (opcion) {
+            case 1:
+                ModificarDatosEstudiante(estudiantes);
+                break;
+            case 2:
+                AgregarBeneficio(beneficios);
+                break;
+            case 3:
+                return;
+            default:
+                cout << "Opción no válida. Intente nuevamente." << endl;
+        }
+    }
+}
+
 int main() {
     vector<Estudiante> estudiantes;
     vector<Beneficio> beneficios;
+    vector<Administrador> administradores;
+
+    // Agregar administradores autorizados
+    administradores.push_back(Administrador("admin1", "password1"));
+    administradores.push_back(Administrador("admin2", "password2"));
 
     while (true) {
         cout << "\n--- Menú Principal ---" << endl;
         cout << "1. Registrar estudiante" << endl;
         cout << "2. Iniciar sesión como estudiante" << endl;
-        cout << "3. Agregar beneficio" << endl;
+        cout << "3. Administración" << endl;
         cout << "4. Listar beneficios" << endl;
         cout << "5. Salir" << endl;
         cout << "Elija una opción: ";
@@ -173,7 +222,19 @@ int main() {
                 IniciarSesion(estudiantes, beneficios);
                 break;
             case 3:
-                AgregarBeneficio(beneficios);
+                {
+                    string username, password;
+                    cout << "Ingrese su nombre de usuario: ";
+                    cin >> username;
+                    cout << "Ingrese su contraseña: ";
+                    cin >> password;
+
+                    if (AutenticarAdministrador(administradores, username, password)) {
+                        MenuAdministracion(estudiantes, beneficios);
+                    } else {
+                        cout << "Acceso no autorizado." << endl;
+                    }
+                }
                 break;
             case 4:
                 ListarBeneficios(beneficios);
