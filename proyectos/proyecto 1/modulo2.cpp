@@ -1,6 +1,5 @@
 #include <iostream>
-#include <vector>
-#include <cstdio>
+#include <string>
 
 using namespace std;
 
@@ -57,15 +56,15 @@ struct Beneficio {
     Beneficio(string nombre, int costo) : nombre(nombre), costo(costo) {}
 };
 
-void agregar_beneficio(vector<Beneficio>& beneficios, string nombre, int costo) {
-    beneficios.push_back(Beneficio(nombre, costo));
+void agregar_beneficio(Beneficio beneficios[], int& num_beneficios, string nombre, int costo) {
+    beneficios[num_beneficios++] = Beneficio(nombre, costo);
     cout << "Beneficio agregado exitosamente." << endl;
 }
 
-void listar_beneficios(const vector<Beneficio>& beneficios) {
+void listar_beneficios(const Beneficio beneficios[], int num_beneficios) {
     cout << "Beneficios disponibles:" << endl;
-    for (const Beneficio& beneficio : beneficios) {
-        cout << beneficio.nombre << " - Costo: " << beneficio.costo << " créditos" << endl;
+    for (int i = 0; i < num_beneficios; i++) {
+        cout << beneficios[i].nombre << " - Costo: " << beneficios[i].costo << " créditos" << endl;
     }
 }
 
@@ -74,17 +73,17 @@ void acreditar_logros(Estudiante& estudiante, int puntos) {
     cout << "Se acreditaron " << puntos << " puntos. Méritos disponibles: " << estudiante.meritos << endl;
 }
 
-void iniciar_sesion(vector<Estudiante>& estudiantes, vector<Beneficio>& beneficios) {
+void iniciar_sesion(Estudiante estudiantes[], int num_estudiantes, Beneficio beneficios[], int num_beneficios) {
     string email, clave;
     cout << "Ingrese su email: ";
     cin >> email;
     cout << "Ingrese su clave: ";
     cin >> clave;
 
-    for (Estudiante& estudiante : estudiantes) {
-        if (estudiante.email == email && estudiante.clave == clave) {
+    for (int i = 0; i < num_estudiantes; i++) {
+        if (estudiantes[i].email == email && estudiantes[i].clave == clave) {
             cout << "Inicio de sesión exitoso." << endl;
-            mostrar_menu_beneficios(estudiante, beneficios);
+            mostrar_menu_beneficios(estudiantes[i], beneficios, num_beneficios);
             return;
         }
     }
@@ -92,7 +91,7 @@ void iniciar_sesion(vector<Estudiante>& estudiantes, vector<Beneficio>& benefici
     cout << "Credenciales incorrectas." << endl;
 }
 
-void mostrar_menu_beneficios(Estudiante& estudiante, vector<Beneficio>& beneficios) {
+void mostrar_menu_beneficios(Estudiante& estudiante, Beneficio beneficios[], int num_beneficios) {
     while (true) {
         cout << "\n--- Menú de Beneficios ---" << endl;
         cout << "1. Mostrar créditos disponibles" << endl;
@@ -106,7 +105,7 @@ void mostrar_menu_beneficios(Estudiante& estudiante, vector<Beneficio>& benefici
         if (opcion == "1") {
             cout << "Créditos disponibles: " << estudiante.meritos << endl;
         } else if (opcion == "2") {
-            listar_beneficios(beneficios);
+            listar_beneficios(beneficios, num_beneficios);
         } else if (opcion == "3") {
             int puntos;
             cout << "Ingrese la cantidad de puntos a acreditar: ";
@@ -128,16 +127,16 @@ struct Administrador {
         : username(username), password(password) {}
 };
 
-bool autenticar_administrador(const vector<Administrador>& administradores, const string& username, const string& password) {
-    for (const Administrador& admin : administradores) {
-        if (admin.username == username && admin.password == password) {
+bool autenticar_administrador(Administrador administradores[], int num_administradores, const string& username, const string& password) {
+    for (int i = 0; i < num_administradores; i++) {
+        if (administradores[i].username == username && administradores[i].password == password) {
             return true;
         }
     }
     return false;
 }
 
-void menu_administracion(vector<Estudiante>& estudiantes, vector<Beneficio>& beneficios) {
+void menu_administracion(Beneficio beneficios[], int& num_beneficios) {
     while (true) {
         cout << "\n--- Menú de Administración ---" << endl;
         cout << "1. Agregar beneficio" << endl;
@@ -153,7 +152,7 @@ void menu_administracion(vector<Estudiante>& estudiantes, vector<Beneficio>& ben
             cin >> nombre;
             cout << "Ingrese el costo del beneficio en créditos: ";
             cin >> costo;
-            agregar_beneficio(beneficios, nombre, costo);
+            agregar_beneficio(beneficios, num_beneficios, nombre, costo);
         } else if (opcion == "2") {
             return;
         } else {
@@ -162,11 +161,11 @@ void menu_administracion(vector<Estudiante>& estudiantes, vector<Beneficio>& ben
     }
 }
 
-void guardar_registros(const vector<Estudiante>& estudiantes, const vector<Beneficio>& beneficios) {
+void guardar_registros(Estudiante estudiantes[], int num_estudiantes, Beneficio beneficios[], int num_beneficios) {
     FILE* archivo = fopen("registros.dat", "wb");
     if (archivo) {
-        for (const Estudiante& estudiante : estudiantes) {
-            fwrite(&estudiante, sizeof(Estudiante), 1, archivo);
+        for (int i = 0; i < num_estudiantes; i++) {
+            fwrite(&estudiantes[i], sizeof(Estudiante), 1, archivo);
         }
         fclose(archivo);
         cout << "Registros guardados exitosamente." << endl;
@@ -175,13 +174,13 @@ void guardar_registros(const vector<Estudiante>& estudiantes, const vector<Benef
     }
 }
 
-void cargar_registros(vector<Estudiante>& estudiantes) {
+void cargar_registros(Estudiante estudiantes[], int& num_estudiantes) {
     FILE* archivo = fopen("registros.dat", "rb");
     if (archivo) {
-        estudiantes.clear();
+        num_estudiantes = 0;
         Estudiante estudiante;
         while (fread(&estudiante, sizeof(Estudiante), 1, archivo)) {
-            estudiantes.push_back(estudiante);
+            estudiantes[num_estudiantes++] = estudiante;
         }
         fclose(archivo);
         cout << "Registros cargados exitosamente." << endl;
@@ -191,14 +190,18 @@ void cargar_registros(vector<Estudiante>& estudiantes) {
 }
 
 int main() {
-    vector<Beneficio> beneficios;
-    vector<Administrador> administradores;
-    vector<Estudiante> estudiantes;
+    const int MAX_ESTUDIANTES = 100;
+    const int MAX_BENEFICIOS = 100;
+    Estudiante estudiantes[MAX_ESTUDIANTES];
+    Beneficio beneficios[MAX_BENEFICIOS];
+    Administrador administradores[2]; // Dos administradores según tu código original
 
-    administradores.push_back(Administrador("admin1", "contraseña1"));
-    administradores.push_back(Administrador("admin2", "contraseña2"));
+    administradores[0] = Administrador("admin1", "contraseña1");
+    administradores[1] = Administrador("admin2", "contraseña2");
 
-    cargar_registros(estudiantes);
+    int num_estudiantes = 0;
+    cargar_registros(estudiantes, num_estudiantes);
+    int num_beneficios = 0;
 
     while (true) {
         cout << "\n--- Menú Principal ---" << endl;
@@ -210,7 +213,7 @@ int main() {
         cin >> opcion;
 
         if (opcion == "1") {
-            iniciar_sesion(estudiantes, beneficios);
+            iniciar_sesion(estudiantes, num_estudiantes, beneficios, num_beneficios);
         } else if (opcion == "2") {
             while (true) {
                 string username, password;
@@ -219,16 +222,16 @@ int main() {
                 cout << "Ingrese la contraseña del administrador: ";
                 cin >> password;
 
-                if (autenticar_administrador(administradores, username, password)) {
+                if (autenticar_administrador(administradores, 2, username, password)) {
                     cout << "Inicio de sesión de administrador exitoso." << endl;
-                    menu_administracion(estudiantes, beneficios);
+                    menu_administracion(beneficios, num_beneficios);
                     break;
                 } else {
                     cout << "Credenciales de administrador incorrectas. Intente nuevamente." << endl;
                 }
             }
         } else if (opcion == "3") {
-            guardar_registros(estudiantes, beneficios);
+            guardar_registros(estudiantes, num_estudiantes, beneficios, num_beneficios);
             break;
         } else {
             cout << "Opción no válida. Intente nuevamente." << endl;
