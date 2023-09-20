@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdio>
 #include <string>
 
 using namespace std;
@@ -11,8 +12,13 @@ struct Estudiante {
     string nombre;
     int meritos;
 
-    Estudiante(string nombre, string email, string clave)
-        : legajo(numero_legajo++), email(email), clave(clave), nombre(nombre), meritos(1000) {}
+    void inicializar(string nombre, string email, string clave) {
+        legajo = numero_legajo++;
+        this->nombre = nombre;
+        this->email = email;
+        this->clave = clave;
+        meritos = 1000;
+    }
 
     void ver_informacion() {
         cout << "Información del estudiante:" << endl;
@@ -53,11 +59,15 @@ struct Beneficio {
     string nombre;
     int costo;
 
-    Beneficio(string nombre, int costo) : nombre(nombre), costo(costo) {}
+    void inicializar(string nombre, int costo) {
+        this->nombre = nombre;
+        this->costo = costo;
+    }
 };
 
 void agregar_beneficio(Beneficio beneficios[], int& num_beneficios, string nombre, int costo) {
-    beneficios[num_beneficios++] = Beneficio(nombre, costo);
+    beneficios[num_beneficios].inicializar(nombre, costo);
+    num_beneficios++;
     cout << "Beneficio agregado exitosamente." << endl;
 }
 
@@ -123,8 +133,10 @@ struct Administrador {
     string username;
     string password;
 
-    Administrador(string username, string password)
-        : username(username), password(password) {}
+    void inicializar(string username, string password) {
+        this->username = username;
+        this->password = password;
+    }
 };
 
 bool autenticar_administrador(Administrador administradores[], int num_administradores, const string& username, const string& password) {
@@ -180,7 +192,9 @@ void cargar_registros(Estudiante estudiantes[], int& num_estudiantes) {
         num_estudiantes = 0;
         Estudiante estudiante;
         while (fread(&estudiante, sizeof(Estudiante), 1, archivo)) {
-            estudiantes[num_estudiantes++] = estudiante;
+            estudiantes[num_estudiantes].inicializar(estudiante.nombre, estudiante.email, estudiante.clave);
+            estudiantes[num_estudiantes].meritos = estudiante.meritos;
+            num_estudiantes++;
         }
         fclose(archivo);
         cout << "Registros cargados exitosamente." << endl;
@@ -196,8 +210,8 @@ int main() {
     Beneficio beneficios[MAX_BENEFICIOS];
     Administrador administradores[2]; // Dos administradores según tu código original
 
-    administradores[0] = Administrador("admin1", "contraseña1");
-    administradores[1] = Administrador("admin2", "contraseña2");
+    administradores[0].inicializar("admin1", "contraseña1");
+    administradores[1].inicializar("admin2", "contraseña2");
 
     int num_estudiantes = 0;
     cargar_registros(estudiantes, num_estudiantes);
