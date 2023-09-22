@@ -101,7 +101,7 @@ void mostrar_menu_beneficios(Estudiante& estudiante, const Beneficio beneficios[
         if (opcion == 1) {
             cout << "Créditos disponibles: " << estudiante.meritos << endl;
         } else if (opcion == 2) {
-            listar_beneficios(beneficios, num_beneficios);
+            listar_beneficios(beneficios, numBeneficios);
         } else if (opcion == 3) {
             int puntos;
             cout << "Ingrese la cantidad de puntos a acreditar: ";
