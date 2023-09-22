@@ -14,7 +14,7 @@ struct Estudiante {
     int meritos;
 };
 
-int numero_legajo = 1000; // Inicializar el número de legajo
+int numero_legajo = 1000000; // Inicializar el número de legajo
 
 void ver_informacion_estudiante(Estudiante estudiante) {
     cout << "Información del estudiante:" << endl;
