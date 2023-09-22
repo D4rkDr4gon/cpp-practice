@@ -1,9 +1,9 @@
 #include <iostream>
-#include <cstdio>
 #include <string>
 
 using namespace std;
 
+// Declaración de estructuras
 struct Estudiante {
     static int numero_legajo;
     int legajo;
@@ -77,6 +77,118 @@ void listar_beneficios(const Beneficio beneficios[], int num_beneficios) {
         cout << beneficios[i].nombre << " - Costo: " << beneficios[i].costo << " créditos" << endl;
     }
 }
+
+void listar_beneficio() {
+    bool band = false;
+    FILE* archivo = fopen("logrosYbeneficios.txt", "rb");
+    if (archivo == NULL) {
+        cout << "\nNo se pudo abrir el archivo.";
+        cout << "\n---------------------------------";
+        band = true;
+    }
+
+    if (band == false) {
+        Beneficio beneficio;
+        while (fread(&beneficio, sizeof(Beneficio), 1, archivo) == 1) {
+            cout << "Nombre: " << beneficio.nombre << ", Costo: " << beneficio.costo << endl;
+        }
+        cout << "\n---------------------------------";
+        fclose(archivo);
+    }
+}
+
+void modificar_beneficio() {
+    bool band = false;
+    FILE* archivo = fopen("logrosYbeneficios.txt", "rb+");
+    if (archivo == NULL) {
+        cout << "\nNo se pudo abrir el archivo.";
+        cout << "\n---------------------------------";
+        band = true;
+    }
+
+    if (band == false) {
+        cout << "Nombre del beneficio a modificar: ";
+        cin.ignore();
+        string nombreBeneficio;
+        getline(cin, nombreBeneficio);
+        cout << "Nuevo nombre: ";
+        string nuevoNombre;
+        getline(cin, nuevoNombre);
+        cout << "Nuevo costo: ";
+        int nuevoCosto;
+        cin >> nuevoCosto;
+        cin.ignore();
+
+        bool buscar = false;
+        Beneficio beneficio;
+        while (fread(&beneficio, sizeof(Beneficio), 1, archivo) == 1) {
+            if (beneficio.nombre == nombreBeneficio) {
+                // Modificar el nombre y el costo
+                beneficio.nombre = nuevoNombre;
+                beneficio.costo = nuevoCosto;
+                buscar = true;
+                fseek(archivo, -static_cast<long>(sizeof(Beneficio)), SEEK_CUR);
+                fwrite(&beneficio, sizeof(Beneficio), 1, archivo);
+                break;
+            }
+        }
+        fclose(archivo);
+
+        if (buscar == true) {
+            cout << "\nBeneficio modificado con exito.";
+            cout << "\n---------------------------------";
+        } else {
+            cout << "\nBeneficio no encontrado.";
+            cout << "\n---------------------------------";
+        }
+    }
+}
+
+void eliminar_beneficio() {
+    bool band = false;
+
+    FILE* archivo = fopen("logrosYbeneficios.txt", "rb+");
+    if (archivo == NULL) {
+        cout << "\nNo se pudo abrir el archivo.";
+        cout << "\n---------------------------------";
+        band = true;
+    }
+
+    if (band == false) {
+        cout << "Nombre del beneficio a eliminar: ";
+        cin.ignore();
+        string nombreBeneficio;
+        getline(cin, nombreBeneficio);
+        bool buscar = false;
+
+        FILE* archivoTemporal = fopen("temporal.txt", "wb+");
+        Beneficio beneficio;
+        while (fread(&beneficio, sizeof(Beneficio), 1, archivo) == 1) {
+            if (beneficio.nombre != nombreBeneficio) {
+                fwrite(&beneficio, sizeof(Beneficio), 1, archivoTemporal);
+                buscar = true;
+            }
+        }
+        fclose(archivo);
+        fclose(archivoTemporal);
+
+        if (buscar == true) {
+            if (remove("logrosYbeneficios.txt") == 0 && rename("temporal.txt", "logrosYbeneficios.txt") == 0) {
+                cout << "\nBeneficio eliminado con exito.";
+                cout << "\n---------------------------------";
+            } else {
+                cout << "\nError al renombrar el archivo.";
+                cout << "\n---------------------------------";
+            }
+        } else {
+            cout << "\nBeneficio no encontrado.";
+            cout << "\n---------------------------------";
+            remove("temporal.txt");
+        }
+    }
+}
+
+
 
 void acreditar_logros(Estudiante& estudiante, int puntos) {
     estudiante.meritos += puntos;
@@ -152,7 +264,10 @@ void menu_administracion(Beneficio beneficios[], int& num_beneficios) {
     while (true) {
         cout << "\n--- Menú de Administración ---" << endl;
         cout << "1. Agregar beneficio" << endl;
-        cout << "2. Salir" << endl;
+        cout << "2. Eliminar beneficio" << endl;
+        cout << "3. Modificar beneficio" << endl;
+        cout << "4. Listar beneficios" << endl;
+        cout << "5. Salir" << endl;
         string opcion;
         cout << "Elija una opción: ";
         cin >> opcion;
@@ -166,6 +281,12 @@ void menu_administracion(Beneficio beneficios[], int& num_beneficios) {
             cin >> costo;
             agregar_beneficio(beneficios, num_beneficios, nombre, costo);
         } else if (opcion == "2") {
+            eliminar_beneficio();
+        } else if (opcion == "3") {
+            modificar_beneficio();
+        } else if (opcion == "4") {
+            listar_beneficio();
+        } else if (opcion == "5") {
             return;
         } else {
             cout << "Opción no válida. Intente nuevamente." << endl;
