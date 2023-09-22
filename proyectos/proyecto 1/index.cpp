@@ -14,7 +14,7 @@ struct Estudiante {
     int meritos;
 };
 
-int numero_legajo = 1; // Inicializar el número de legajo
+int numero_legajo = 1000; // Inicializar el número de legajo
 
 void ver_informacion_estudiante(Estudiante estudiante) {
     cout << "Información del estudiante:" << endl;
@@ -24,7 +24,7 @@ void ver_informacion_estudiante(Estudiante estudiante) {
     cout << "Méritos disponibles: " << estudiante.meritos << endl;
 }
 
-void modificar_informacion_estudiante(Estudiante& estudiante) {
+void modificar_informacion_estudiante(Estudiante* estudiante) {
     cout << "Modificar información del estudiante:" << endl;
     cout << "1. Cambiar nombre" << endl;
     cout << "2. Cambiar contraseña" << endl;
@@ -34,14 +34,13 @@ void modificar_informacion_estudiante(Estudiante& estudiante) {
     cin >> opcion;
     if (opcion == 1) {
         cout << "Nuevo nombre: ";
-        cin >> estudiante.nombre;
+        cin >> estudiante->nombre; // Utilizamos -> para acceder a los miembros del puntero
     } else if (opcion == 2) {
         cout << "Nueva clave: ";
-        cin >> estudiante.clave;
+        cin >> estudiante->clave;
     }
     cout << "Información modificada con éxito." << endl;
 }
-
 
 bool validar_email(string email) {
     // Función para validar el formato de un email
@@ -235,7 +234,7 @@ void mostrar_menu_beneficios(Estudiante& estudiante, const Beneficio beneficios[
         } else if (opcion == 4) {
             ver_informacion_estudiante(estudiante);
         } else if (opcion == 5) {
-            modificar_informacion_estudiante(estudiante);
+            modificar_informacion_estudiante(&estudiante);
         } else if (opcion == 6) {
             return;
         } else {
@@ -320,8 +319,7 @@ void menu_administracion(Estudiante estudiantes[], int& numEstudiantes, Benefici
                 cout << "Se ha alcanzado el límite de estudiantes." << endl;
             }
         } else if (opcion == "6") {
-            // Agregar lógica para modificar información de estudiante aquí
-            cout << "Función para modificar información de estudiante aún no implementada." << endl;
+            modificar_informacion_estudiante(estudiantes);
         } else if (opcion == "7") {
             return;
         } else {
@@ -431,6 +429,7 @@ int main() {
         } else if (opcion == 4) {
             guardar_registros(estudiantes, numEstudiantes, beneficios, numBeneficios);
             guardar_logros_y_beneficios(beneficios, numBeneficios);
+            cout << "Gracias por usar el sistema. ¡Hasta luego!" << endl;
             break;
         } else {
             cout << "Opción no válida. Intente nuevamente." << endl;
