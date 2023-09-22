@@ -258,7 +258,7 @@ void iniciar_sesion_estudiante(Estudiante estudiantes[], int numEstudiantes, Ben
     for (int i = 0; i < numEstudiantes; ++i) {
         if (estudiantes[i].email == email && estudiantes[i].clave == clave) {
             cout << "Inicio de sesión exitoso." << endl;
-            mostrar_menu_beneficios(estudiantes[i], beneficios, numbeneficios);
+            mostrar_menu_beneficios(estudiantes[i], beneficios, numBeneficios);
             return;
         }
     }
