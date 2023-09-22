@@ -86,6 +86,36 @@ struct Beneficio {
     int costo;
 };
 
+void mostrar_menu_beneficios(Estudiante& estudiante, const Beneficio beneficios[], int num_beneficios) {
+    while (true) {
+        cout << "\n--- Menú de Beneficios ---" << endl;
+        cout << "1. Mostrar créditos disponibles" << endl;
+        cout << "2. Mostrar beneficios disponibles" << endl;
+        cout << "3. Acreditar logros" << endl;
+        cout << "4. Cerrar sesión" << endl;
+
+        int opcion;
+        cout << "Elija una opción: ";
+        cin >> opcion;
+
+        if (opcion == 1) {
+            cout << "Créditos disponibles: " << estudiante.meritos << endl;
+        } else if (opcion == 2) {
+            listar_beneficios(beneficios, num_beneficios);
+        } else if (opcion == 3) {
+            int puntos;
+            cout << "Ingrese la cantidad de puntos a acreditar: ";
+            cin >> puntos;
+            acreditar_logros(estudiante, puntos);
+        } else if (opcion == 4) {
+            return;
+        } else {
+            cout << "Opción no válida. Intente nuevamente." << endl;
+        }
+    }
+}
+
+
 void agregar_beneficio(Beneficio beneficios[], int& numBeneficios) {
     cout << "Ingrese el nombre del beneficio: ";
     cin >> beneficios[numBeneficios].nombre;
