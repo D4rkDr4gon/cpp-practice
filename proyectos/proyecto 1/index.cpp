@@ -86,6 +86,19 @@ struct Beneficio {
     int costo;
 };
 
+void listar_beneficios(const Beneficio beneficios[], int numBeneficios) {
+    cout << "Beneficios disponibles:" << endl;
+    for (int i = 0; i < numBeneficios; ++i) {
+        cout << "Nombre: " << beneficios[i].nombre << " - Costo: " << beneficios[i].costo << " créditos" << endl;
+    }
+}
+
+void acreditar_logros(Estudiante& estudiante, int puntos) {
+    estudiante.meritos += puntos;
+    cout << "Se acreditaron " << puntos << " puntos. Méritos disponibles: " << estudiante.meritos << endl;
+}
+
+
 void mostrar_menu_beneficios(Estudiante& estudiante, const Beneficio beneficios[], int numbeneficios) {
     while (true) {
         cout << "\n--- Menú de Beneficios ---" << endl;
@@ -101,7 +114,7 @@ void mostrar_menu_beneficios(Estudiante& estudiante, const Beneficio beneficios[
         if (opcion == 1) {
             cout << "Créditos disponibles: " << estudiante.meritos << endl;
         } else if (opcion == 2) {
-            listar_beneficios(beneficios, numBeneficios);
+            listar_beneficios(beneficios, numbeneficios);
         } else if (opcion == 3) {
             int puntos;
             cout << "Ingrese la cantidad de puntos a acreditar: ";
@@ -125,17 +138,7 @@ void agregar_beneficio(Beneficio beneficios[], int& numBeneficios) {
     cout << "Beneficio agregado exitosamente." << endl;
 }
 
-void listar_beneficios(Beneficio beneficios[], int numBeneficios) {
-    cout << "Beneficios disponibles:" << endl;
-    for (int i = 0; i < numBeneficios; ++i) {
-        cout << beneficios[i].nombre << " - Costo: " << beneficios[i].costo << " créditos" << endl;
-    }
-}
 
-void acreditar_logros(Estudiante& estudiante, int puntos) {
-    estudiante.meritos += puntos;
-    cout << "Se acreditaron " << puntos << " puntos. Méritos disponibles: " << estudiante.meritos << endl;
-}
 
 // Módulo 3: Consumidor de Beneficios
 
