@@ -86,7 +86,7 @@ struct Beneficio {
     int costo;
 };
 
-void mostrar_menu_beneficios(Estudiante& estudiante, const Beneficio beneficios[], int num_beneficios) {
+void mostrar_menu_beneficios(Estudiante& estudiante, const Beneficio beneficios[], int numbeneficios) {
     while (true) {
         cout << "\n--- Menú de Beneficios ---" << endl;
         cout << "1. Mostrar créditos disponibles" << endl;
@@ -258,7 +258,7 @@ void iniciar_sesion_estudiante(Estudiante estudiantes[], int numEstudiantes, Ben
     for (int i = 0; i < numEstudiantes; ++i) {
         if (estudiantes[i].email == email && estudiantes[i].clave == clave) {
             cout << "Inicio de sesión exitoso." << endl;
-            mostrar_menu_beneficios(estudiantes[i], beneficios, num_beneficios);
+            mostrar_menu_beneficios(estudiantes[i], beneficios, numbeneficios);
             return;
         }
     }
