@@ -2,18 +2,47 @@
 #include <string>
 using namespace std;
 
+struct Cancion {
+    sting nombre;
+    int puntuacion = 0;
+};
+
 struct NodoCanciones {
-    string nombre;
+    Cancion nombre;
     NodoCanciones* siguiente;
 };
 
 // Función para crear un nuevo nodo 
 NodoCanciones* crearNodo(string valor) { 
     NodoCanciones* nuevoNodo = new NodoCanciones; 
-    nuevoNodo->nombre = valor; 
+    nuevoNodo->nombre.nombre = valor; 
     nuevoNodo->siguiente = nullptr; 
     return nuevoNodo; 
 } 
+
+Nodo* CargarHistorial(NodoCanciones* inicio, Cancion valor) { 
+    NodoCanciones* nuevoNodo = crearNodo(valor); 
+    if (inicio == nullptr) { 
+        inicio = nuevoNodo; 
+    } else { 
+        Nodo* actual = inicio; 
+        while (actual->siguiente != nullptr) { 
+            actual = actual->siguiente; 
+        } 
+        actual->siguiente = nuevoNodo; 
+    } 
+    return inicio; 
+} 
+
+// Función para imprimir una lista enlazada simple 
+void ImprimirHistorial(NodoCanciones* inicio) { 
+    NodoCanciones* actual = inicio; 
+    while (actual != nullptr) { 
+        cout << actual -> nombre.nombre << " " << actual -> nombre.puntuacion << endl; 
+        actual = actual->siguiente; 
+    } 
+     
+}
  
  // Función para insertar un elemento en la pila 
 void push(NodoCanciones*& pila, string valor) { 
@@ -42,11 +71,13 @@ bool isEmpty(NodoCanciones* pila) {
 
 //funcion para reproducir la primera cancion de la lista
 void Reproducir (NodoCanciones*& pila, NodoCanciones*& historial) {
-    string proximaCancion;
-
+    Cancion proximaCancion;
+    
     proximaCancion = pop(pila);
     cout << "la cancion q se reproduce es: " << proximaCancion << endl;
-    push(historial, proximaCancion);
+    cout << "puntuar la cancion: (1* - 5*)" << endl;
+    cin >> proximaCancion.puntuacion;
+    CargarHistorial(historial, proximaCancion);
 }
 
 //funcion q muestra la siguiente cancion
@@ -77,9 +108,9 @@ void Inversor(NodoCanciones*& pila) {
 }
 
 int main(){
-    //inicializar la pila
+    //inicializar la 
     NodoCanciones* pila = nullptr;
-    NodoCanciones* historial = nullptr;
+    NodoCanciones* listaHistorial = nullptr;
     
 
     //bucle de la interfaz
@@ -115,7 +146,10 @@ int main(){
         } else if (opcion == 4) {
             Inversor(pila);
             cout << "pila invertida" << endl;
-        } else if (opcion == 5) {
+        } else if(opcion == 5) {
+                ImprimirHistorial(historial);
+        }
+         else if (opcion == 6) {
             cout << "reproduccion terminada" << endl;
             break;
         } else {
