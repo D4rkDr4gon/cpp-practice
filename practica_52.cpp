@@ -43,6 +43,30 @@ void ImprimirHistorial(NodoCanciones* inicio) {
     } 
 }
 
+//busqueda de canciones por puntaje
+NodoCanciones* BuscarCancionPuntuada(NodoCanciones* inicio, int puntuacion) { 
+    NodoCanciones* actual = inicio; 
+    while (actual != nullptr) { 
+        if (actual->cancion.puntuacion == puntuacion) { 
+            return actual; 
+        } 
+        actual = actual->siguiente; 
+    } 
+    return nullptr; 
+}
+
+//busqueda de canciones por nombre
+NodoCanciones* BuscarCancionNombre(NodoCanciones* inicio, string nombre) { 
+    NodoCanciones* actual = inicio; 
+    while (actual != nullptr) { 
+        if (actual->cancion.nombre == nombre) { 
+            return actual; 
+        } 
+        actual = actual->siguiente; 
+    } 
+    return nullptr; 
+}
+
 // Función para insertar un elemento en la pila 
 void push(NodoCanciones*& pila, string valor) { 
     NodoCanciones* nuevoNodo = crearNodo(valor); 
@@ -122,7 +146,9 @@ int main() {
         cout << "3. Tomar cancion para reproducir" << endl;
         cout << "4. Invertir la playlist" << endl;
         cout << "5. Ver historial de reproduccion" << endl;
-        cout << "6. Salir" << endl;
+        cout << "6. buscar las canciones previamente puntuadas" << endl;
+        cout << "7. buscar las canciones por nombre" << endl;
+        cout << "8. Salir" << endl;
         cout << "¿Qué desea hacer? ";
         cin >> opcion;
         cin.ignore();
@@ -140,12 +166,31 @@ int main() {
         } else if (opcion == 3) {
             cout << "------Panel de reproduccion-------" << endl;
             Reproducir(pila, listaHistorial);
+            Mostrar(pila);
         } else if (opcion == 4) {
             Inversor(pila);
             cout << "Playlist invertida." << endl;
         } else if (opcion == 5) {
             ImprimirHistorial(listaHistorial);
-        } else if (opcion == 6) {
+        } else if(opcion == 6) {
+            cout << "----- Busqueda en funcion de puntuacion-------" << endl;
+            int puntuacion;
+            
+            cout << "ingrese la cantidad de estrellas: " << endl;
+            cin >> puntuacion;
+            cin.ignore();
+
+            BuscarCancionPuntuada(listaHistorial, puntuacion);
+        } else if(opcion == 7) {
+            cout << "----- Busqueda en funcion de puntuacion-------" << endl;
+            string nombre;
+            
+            cout << "ingrese la cantidad de estrellas: " << endl;
+            cin >> nombre;
+            cin.ignore();
+
+            BuscarCancionNombre(listaHistorial, nombre);
+        }else if (opcion == 8) {
             cout << "Reproduccion terminada." << endl;
             break;
         } else {
