@@ -41,12 +41,12 @@ bool isEmpty(NodoCanciones* pila) {
 }
 
 //funcion para reproducir la primera cancion de la lista
-void Reproducir (NodoCanciones*& pila) {
+void Reproducir (NodoCanciones*& pila, NodoCanciones*& historial) {
     string proximaCancion;
 
     proximaCancion = pop(pila);
     cout << "la cancion q se reproduce es: " << proximaCancion << endl;
-    
+    push(historial, proximaCancion);
 }
 
 //funcion q muestra la siguiente cancion
@@ -66,21 +66,20 @@ void Inversor(NodoCanciones*& pila) {
     pilaAux = pila;
 
     //vaciar pila
-    while(!isEmpty(pila)){
-        pop(pila);
-    }
+    pila = nullptr;
+
     //pasamos los valores de la pila auxiliar a la pila
     while(!isEmpty(pilaAux)) {
         string valor = pop(pilaAux);
-        valor = pila -> nombre;
+        push(pila, valor);
     }
-    
 
 }
 
 int main(){
     //inicializar la pila
     NodoCanciones* pila = nullptr;
+    NodoCanciones* historial = nullptr;
     
 
     //bucle de la interfaz
@@ -93,7 +92,8 @@ int main(){
         cout << "2. eliminar la primera cancion" << endl;
         cout << "3. tomar cancion para reproducir" << endl;
         cout << "4. invertir la playlist" << endl;
-        cout << "5. salir" << endl;
+        cout << "5. ver historial de reproduccion" << endl;
+        cout << "6. salir" << endl;
         cout << "que desea hacer? ";
         cin >> opcion;
 
