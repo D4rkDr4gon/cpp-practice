@@ -11,14 +11,14 @@ struct Pokemon {
     string tipo;
     string subTipo;
     string desc;
-}
+};
 
 //nodo de la estrucutra arborea
 struct Nodo {
     Pokemon pokemon;
     Nodo* izq;
     Nodo* der;
-}
+};
 
 //funcion para crear un nodo
 Nodo* crearNodo(Pokemon pokemon) {
@@ -65,13 +65,7 @@ void agregarPokemon(Nodo* &arbol) {
 }
 
 //funcion para buscar pokemon en el arbol por nombre
-void buscarPokemon(Nodo* arbol) {
-
-    string nombre;
-
-    cout << "-------Buscador de pokemon-------" << endl;
-    cout << "Ingrese el nombre del pokemon: ";
-    cin >> nombre;
+void buscarPokemon(Nodo* arbol, string nombre) {
 
     if (arbol == NULL) {
         cout << "No se encontro el pokemon" << endl;
@@ -165,7 +159,13 @@ int main() {
             limpiarTerminal();
         }
         else if(opcion == 2) {
-            buscarPokemon(arbol);
+            string nombre;
+
+            cout << "-------Buscador de pokemon-------" << endl;
+            cout << "Ingrese el nombre del pokemon: ";
+            cin >> nombre;
+
+            buscarPokemon(arbol, nombre);
             limpiarTerminal();
         }
         else if(opcion == 3) {
