@@ -146,6 +146,9 @@ int main() {
         cin >> opcion;
         cout << "[==================================]" << endl;
         
+        if (PrioridadVacia(colaPrioridad) == 1 && opcion != 3) {
+            cout << "No hay pacientes en espera" << endl;
+        } 
 
         if (opcion == 1) {
             string nombre;
@@ -168,6 +171,7 @@ int main() {
                 cout << "El paciente " << nombre << " ha sido atendido" << endl;
             }
         } else if (opcion == 3) {
+            cout << "Gracias por usar el sistema de emergencias" << endl;
             break;
         } else {
             cout << "Opcion invalida" << endl;
